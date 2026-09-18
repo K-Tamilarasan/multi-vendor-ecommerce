@@ -1,0 +1,115 @@
+  Order statuses:                      
+
+text
+PENDING_PAYMENT
+PAID
+PROCESSING
+PACKED
+SHIPPED
+OUT_FOR_DELIVERY
+DELIVERED
+CANCELLED
+RETURN_REQUESTED
+RETURNED
+COMPLETED
+
+
+
+Payment statuses:
+
+text
+PENDING
+PAID
+FAILED
+PARTIALLY_REFUNDED
+REFUNDED
+
+
+(environment) D:\Projects\multi_vendor_ecommerce\backend>python -m pip show djangorestframework
+Name: djangorestframework
+Version: 3.18.1
+Summary: Web APIs for Django, made easy.
+Home-page: https://www.django-rest-framework.org
+Author: 
+Author-email: Tom Christie <tom@tomchristie.com>
+License-Expression: BSD-3-Clause
+Location: D:\Projects\multi_vendor_ecommerce\backend\environment\Lib\site-packages
+Requires: django
+Required-by: 
+
+
+(environment) D:\Projects\multi_vendor_ecommerce\backend>pip show psycopg
+Name: psycopg
+Version: 3.3.5
+Summary: PostgreSQL database adapter for Python
+Home-page: https://psycopg.org/
+Author: 
+Author-email: Daniele Varrazzo <daniele.varrazzo@gmail.com>
+License-Expression: LGPL-3.0-only
+Location: D:\Projects\multi_vendor_ecommerce\backend\environment\Lib\site-packages
+Requires: tzdata
+Required-by:          
+
+
+
+
+
+User
+ │
+ ├──────────→ Addresses
+ │
+ ├──────────→ Cart
+ │               │
+ │               └──→ CartItems ──→ Product
+ │
+ └──────────→ Wishlist
+                 │
+                 └──→ WishlistItems ──→ Product
+              
+
+
+                         ┌──────────────┐
+                         │     User     │
+                         └──────┬───────┘
+                                │
+              ┌─────────────────┼─────────────────┐
+              │                 │                 │
+              ↓                 ↓                 ↓
+         Addresses            Cart            Wishlist
+          1 : Many            1 : 1             1 : 1
+                                │                 │
+                                ↓                 ↓
+                           CartItems         WishlistItems
+                           Many : 1           Many : 1
+                                │                 │
+                                └────────┬────────┘
+                                         ↓
+                                      Product
+
+
+
+
+
+                        User
+                          │
+                          ↓
+                        Order
+                     /     │      \
+                    /      │       \
+                   ↓       ↓        ↓
+              Address   Payment   StatusHistory
+                          
+
+                        Order
+                          │
+                          ↓
+                    SellerOrder
+                    /          \
+                   ↓            ↓
+               Seller        OrderItems
+                                │
+                                ↓
+                              Product
+                                │
+                                ↓
+                              Review
