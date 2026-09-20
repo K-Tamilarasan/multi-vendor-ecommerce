@@ -112,4 +112,110 @@ User
                               Product
                                 │
                                 ↓
-                              Review
+  
+                            Review
+
+
+
+
+
+Later registration/login serializers தனியாக build பண்ணுவோம். அங்கே password handling proper-aa செய்வோம்
+
+
+🔐 Important security point
+
+Right now serializers expose:
+
+'user'
+'cart'
+'wishlist'
+
+That's okay for our initial serializer layer.
+
+But later our API must enforce:
+
+Logged-in Customer
+       ↓
+Only their own
+       ↓
+Address / Cart / Wishlist
+
+Otherwise one user could potentially try another user's ID.
+
+We'll solve that with authentication + permissions + queryset filtering, not by trusting React.
+
+இது mainly:
+
+Email + Password
+      ↓
+JWT Serializer
+      ↓
+Access Token + Refresh Token
+
+Example response concept:
+
+{
+    "access": "...",
+    "refresh": "..."
+}
+
+அதனால் Login/Register/Auth phase வரும்போது SimpleJWT serializers பயன்படுத்துவோம்.
+
+
+4️⃣ API Flow — இதை மறக்காதே
+ஒரு request எப்படி travel ஆகுது என்று பாரு:
+Browser / React / Postman
+          ↓
+shopsphere/urls.py
+          ↓
+customers/urls.py
+          ↓
+AddressViewSet
+          ↓
+AddressSerializer
+          ↓
+Address Model
+          ↓
+PostgreSQL
+Example:
+POST
+/api/customers/addresses/
+↓
+shopsphere/urls.py
+↓
+customers/urls.py
+↓
+AddressViewSet
+↓
+AddressSerializer
+↓
+Address.objects...
+↓
+PostgreSQL.
+இதுதான் Django REST API-யின் basic backbone. 🔥
+
+
+
+JWT Login
+    ↓
+request.user
+    ↓
+Cart
+    ↓
+Validate stock
+    ↓
+Calculate totals
+    ↓
+Create Order
+    ↓
+Split by Seller
+    ↓
+Create SellerOrders
+    ↓
+Create OrderItems
+    ↓
+Payment status
+    ↓
+Clear Cart
+
+

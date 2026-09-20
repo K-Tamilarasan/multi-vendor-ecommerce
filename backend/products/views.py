@@ -4,8 +4,19 @@ from django.shortcuts import render
 
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Category, Product
-from .serializers import CategorySerializer, ProductSerializer
+from .models import (
+    Category,
+    Product,
+    ProductImage,
+    Inventory,
+)
+
+from .serializers import (
+    CategorySerializer,
+    ProductSerializer,
+    ProductImageSerializer,
+    InventorySerializer,
+)
 
 
 class CategoryViewSet(ModelViewSet):
@@ -16,3 +27,13 @@ class CategoryViewSet(ModelViewSet):
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+
+class ProductImageViewSet(ModelViewSet):
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
+
+
+class InventoryViewSet(ModelViewSet):
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
