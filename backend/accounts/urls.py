@@ -1,7 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
-from .views import UserViewSet, SellerProfileViewSet
-
+from .views import UserViewSet
 
 router = DefaultRouter()
 
@@ -11,10 +10,10 @@ router.register(
     basename='user'
 )
 
-router.register(
-    'seller-profiles',
-    SellerProfileViewSet,
-    basename='seller-profile'
-)
+# router.register(
+#     'seller-profiles',
+#     SellerProfileViewSet,
+#     basename='seller-profile'
+# )
 
 urlpatterns = router.urls

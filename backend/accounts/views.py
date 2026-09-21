@@ -4,8 +4,8 @@ from django.shortcuts import render
 
 from rest_framework.viewsets import ModelViewSet
 
-from .models import User, SellerProfile
-from .serializers import UserSerializer, SellerProfileSerializer
+from .models import User
+from .serializers import UserSerializer
 
 
 class UserViewSet(ModelViewSet):
@@ -13,6 +13,6 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
 
 
-class SellerProfileViewSet(ModelViewSet):
-    queryset = SellerProfile.objects.all()
-    serializer_class = SellerProfileSerializer
+# class SellerProfileViewSet(ModelViewSet):
+#     queryset = SellerProfile.objects.all()
+#     serializer_class = SellerProfileSerializer

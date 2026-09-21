@@ -4,6 +4,10 @@ from django.shortcuts import render
 
 from rest_framework.viewsets import ModelViewSet
 
+from rest_framework.permissions import IsAuthenticated
+
+from accounts.permissions import IsSeller
+
 from .models import (
     Category,
     Product,
@@ -22,11 +26,14 @@ from .serializers import (
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
 
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsSeller]
 
 
 class ProductImageViewSet(ModelViewSet):
