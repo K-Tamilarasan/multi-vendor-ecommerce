@@ -219,3 +219,45 @@ Payment status
 Clear Cart
 
 
+⚠️ 401 vs 403
+இதையும் clear-aa remember பண்ணிக்கோ:
+401 Unauthorized
+Token இல்லை / valid authentication இல்லை
+403 Forbidden
+Login successful
+BUT
+இந்த user-க்கு permission இல்லை
+
+
+But one important improvement later:
+IsCustomer மட்டும் போதாது. இல்லனா Customer A, Customer B-வுடைய address-ஐ access செய்ய வாய்ப்பு இருக்கும்.
+Later we'll make:
+Authentication
+      +
+Role Permission
+      +
+Object Ownership
+அதாவது "Customer தான், but இந்த address அவருடையதா?" என்பதையும் check பண்ணுவோம்.
+அதுதான் real-world security. 🔐
+
+
+👨‍💼 Step 3 — Seller APIs
+Seller already has:
+permission_classes = [IsSeller]
+
+for Product.
+But Seller-related APIs should eventually follow:
+Seller
+ ├── Products
+ ├── Product Images
+ ├── Inventory
+ └── Seller Orders
+For now, don't blindly put IsSeller on every Product GET because customers need to browse products in a real e-commerce app.
+We'll handle that properly later:
+GET       → public/customer
+POST      → seller
+PUT/PATCH → seller
+DELETE    → seller/admin
+That's why we're not rushing this part.
+
+
