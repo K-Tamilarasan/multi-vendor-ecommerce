@@ -6,7 +6,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(
         write_only=True,
-        required=True
+        required=True,
+        style={'input_type': 'password'}
     )
 
     class Meta:
@@ -30,19 +31,25 @@ class UserSerializer(serializers.ModelSerializer):
             'updated_at',
         ]
 
-        def create(self, validated_data):
-            password = validated_data.pop('password')
+        extra_kwargs = {
+            'password': {'write_only': True}  # API response-la password return aagakoodathu
+        }
 
-            # user = User.objects.create_user(password=password,**validated_data)
+    def create(self, validated_data):
+        password = validated_data.pop('password')
 
-            # return user
-            user = User(**validated_data)
+        # user = User.objects.create_user(password=password,**validated_data)
 
-            user.set_password(password)
+        # return user
 
-            user.save()
+        #method - 2
+        user = User(**validated_data)
 
-            return user
+        user.set_password(password)
+
+        user.save()
+
+        return user
 
 
 class SellerProfileSerializer(serializers.ModelSerializer):

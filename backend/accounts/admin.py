@@ -2,9 +2,11 @@
 # Register your models here.
 
 from django.contrib import admin
+from django.contrib.auth.hashers import is_password_usable, identify_hasher
 from .models import User, SellerProfile
 
 
+# admin.site.register(User)
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
@@ -30,6 +32,18 @@ class UserAdmin(admin.ModelAdmin):
         'last_name',
         'phone',
     )
+
+    def save_model(self, request, obj, form, change):
+        # Admin-la password enter panniruntha, athu already hashed-aa illayana hash pannum
+        if obj.password:
+            try:
+                identify_hasher(obj.password)
+            except ValueError:
+                # Value plain text-aa iruntha ValueError throw pannum, so inga hash aagidum
+                obj.set_password(obj.password)
+        super().save_model(request, obj, form, change)
+
+
 
 
 @admin.register(SellerProfile)

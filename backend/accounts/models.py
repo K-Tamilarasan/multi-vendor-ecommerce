@@ -11,15 +11,9 @@ class UserManager(BaseUserManager):
             raise ValueError('Email is required')
 
         email = self.normalize_email(email)
-
-        user = self.model(
-            email=email,
-            **extra_fields
-        )
-
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
@@ -34,11 +28,7 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True')
 
-        return self.create_user(
-            email,
-            password,
-            **extra_fields
-        )
+        return self.create_user(email=email, password=password, **extra_fields)
 
 class User(AbstractUser):
 
@@ -54,41 +44,23 @@ class User(AbstractUser):
 
     username = None
 
-    email = models.EmailField(
-        max_length=255,
-        unique=True
-    )
+    email = models.EmailField(max_length=255, unique=True)
+    phone = models.CharField(max_length=15, unique=True, null=True, blank=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='CUSTOMER')
 
-    phone = models.CharField(
-        max_length=15,
-        unique=True,
-        null=True,
-        blank=True
-    )
-
-    role = models.CharField(
-        max_length=20,
-        choices=ROLE_CHOICES,
-        default='CUSTOMER'
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    def __str__(self):
-        return self.email
-
     class Meta:
         db_table = 'users'
         ordering = ['-created_at']
+
+    def __str__(self):
+        return self.email
+    
 
     @property
     def is_admin(self):
@@ -119,41 +91,14 @@ class SellerProfile(models.Model):
         related_name='seller_profile'
     )
 
-    store_name = models.CharField(
-        max_length=150,
-        unique=True
-    )
-
-    store_description = models.TextField(
-        null=True,
-        blank=True
-    )
-
-    business_email = models.EmailField(
-        null=True,
-        blank=True
-    )
-
-    business_phone = models.CharField(
-        max_length=15,
-        null=True,
-        blank=True
-    )
-
-    store_logo = models.ImageField(
-        upload_to='vendors/logos/',
-        blank=True,
-        null=True
-    )
-
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default='PENDING'
-    )
+    store_name = models.CharField(max_length=150, unique=True)
+    store_description = models.TextField(null=True, blank=True)
+    business_email = models.EmailField(null=True, blank=True)
+    business_phone = models.CharField(max_length=15, null=True, blank=True)
+    store_logo = models.ImageField(upload_to='vendors/logos/', blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
 
     created_at = models.DateTimeField(auto_now_add=True)
-
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
