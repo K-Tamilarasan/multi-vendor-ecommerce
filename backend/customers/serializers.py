@@ -23,6 +23,7 @@ class AddressSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             'id',
+            'user',
             'created_at',
             'updated_at',
         ]
@@ -39,6 +40,7 @@ class CartSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             'id',
+            'user',
             'created_at',
             'updated_at',
         ]
@@ -73,6 +75,7 @@ class WishlistSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             'id',
+            'user',
             'created_at',
             'updated_at',
         ]
