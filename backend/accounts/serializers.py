@@ -69,6 +69,8 @@ class SellerProfileSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             'id',
+            'user',
+            'status',
             'created_at',
             'updated_at',
         ]

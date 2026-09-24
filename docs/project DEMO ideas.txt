@@ -260,4 +260,39 @@ PUT/PATCH → seller
 DELETE    → seller/admin
 That's why we're not rushing this part.
 
+But one important thing: CartItem create செய்யும்போது arbitrary cart_id கொடுத்து வேறு customer's cart-ல் item add பண்ண முடியாதபடி ownership validation தேவை.
+
+அதை clean-aa next step-ல் handle பண்ணலாம்.
+
+cart__user=self.request.user
+
+means:
+
+CartItem
+   ↓
+Cart
+   ↓
+Cart.user
+   ↓
+Current JWT user
+
+/api/accounts/users/
+
+ModelViewSet என்பதால் anyone with access could potentially:
+
+GET users
+PUT another user
+DELETE another user
+
+இது production architecture-க்கு safe இல்லை.
+
+So next batch-ல் User API-யை registration/profile purpose-க்கு properly restrict பண்ணுவோம்.
+
+Don't modify it yet.
+
+POST /users/       → Registration
+GET /users/        → own profile
+PATCH /users/ID/   → own profile
+DELETE             → later handle
+
 

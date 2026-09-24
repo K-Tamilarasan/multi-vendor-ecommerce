@@ -44,4 +44,15 @@ class IsSellerOrAdmin(BasePermission):
         if request.user.role != 'SELLER':
             return False
 
+        # return obj.seller.user == request.user
+
+        return (
+            hasattr(request.user, 'seller_profile')
+            and request.user.seller_profile.status == 'APPROVED'
+        )
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.role == 'ADMIN':
+            return True
+
         return obj.seller.user == request.user

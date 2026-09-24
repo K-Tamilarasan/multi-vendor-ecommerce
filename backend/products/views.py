@@ -6,6 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 #
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import PermissionDenied
 
 # from accounts.permissions import IsSeller
 from accounts.permissions import IsSellerOrAdmin
@@ -36,12 +37,17 @@ class ProductViewSet(ModelViewSet):
         return [IsSellerOrAdmin()]
 
     def perform_create(self, serializer):
+        # if self.request.user.role == 'ADMIN':
+        #     serializer.save()
+        # else:
+        #     serializer.save(
+        #         seller=self.request.user.seller_profile
+        #     )
+
         if self.request.user.role == 'ADMIN':
-            serializer.save()
-        else:
-            serializer.save(
-                seller=self.request.user.seller_profile
-            )
+            raise PermissionDenied("Admin cannot create seller products directly.")
+
+        serializer.save(seller=self.request.user.seller_profile)
 
 
 class ProductImageViewSet(ModelViewSet):
