@@ -56,3 +56,33 @@ class IsSellerOrAdmin(BasePermission):
             return True
 
         return obj.seller.user == request.user
+
+
+class IsProductOwnerOrAdmin(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if not request.user.is_authenticated:
+            return False
+
+        if request.user.role == 'ADMIN':
+            return True
+
+        if request.user.role != 'SELLER':
+            return False
+
+        return obj.product.seller.user == request.user
+
+
+class IsInventoryOwnerOrAdmin(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if not request.user.is_authenticated:
+            return False
+
+        if request.user.role == 'ADMIN':
+            return True
+
+        if request.user.role != 'SELLER':
+            return False
+
+        return obj.product.seller.user == request.user

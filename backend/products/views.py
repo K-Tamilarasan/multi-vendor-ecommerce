@@ -16,12 +16,19 @@ from .models import Product
 #
 from .serializers import (CategorySerializer,ProductSerializer,ProductImageSerializer,InventorySerializer,)
 from .serializers import ProductSerializer
+from accounts.permissions import IsAdmin,IsProductOwnerOrAdmin,IsInventoryOwnerOrAdmin
 
 
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+
+        return [IsAdmin()]
 
 
 class ProductViewSet(ModelViewSet):
@@ -53,8 +60,49 @@ class ProductViewSet(ModelViewSet):
 class ProductImageViewSet(ModelViewSet):
     queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer
+    # permission_classes = [IsProductOwnerOrAdmin]
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [IsSellerOrAdmin()]
+
+        return [IsProductOwnerOrAdmin()]
+
+    def perform_create(self, serializer):
+        product = serializer.validated_data['product']
+
+        if self.request.user.role == 'ADMIN':
+            serializer.save()
+            return
+
+        if product.seller.user != self.request.user:
+            raise PermissionDenied(
+                "you can only add images to your own products."
+            )
+        
+        serializer.save()
 
 
 class InventoryViewSet(ModelViewSet):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [IsSellerOrAdmin()]
+
+        return [IsInventoryOwnerOrAdmin()]
+
+    def perform_create(self, serializer):
+        product = serializer.validated_data['product']
+
+        if self.request.user.role == 'ADMIN':
+            serializer.save()
+            return
+
+        if product.seller.user != self.request.user:
+            raise PermissionDenied(
+                "you can only manage inventory for your own products."
+            )
+
+        serializer.save()

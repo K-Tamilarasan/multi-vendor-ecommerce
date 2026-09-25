@@ -76,3 +76,22 @@ class InventorySerializer(serializers.ModelSerializer):
             'id',
             'updated_at',
         ]
+
+    def validate(self, attrs):
+        quantity = attrs.get(
+            'quantity',
+            getattr(self.instance, 'quantity', 0)
+        )
+
+        reserved_quantity = attrs.get(
+            'reserved_quantity',
+            getattr(self.instance, 'reserved_quantity', 0)
+        )
+
+        if reserved_quantity > quantity:
+            raise serializers.ValidationError({
+                'reserved_quantity':
+                'Reserved quantity cannot exceed available quantity.'
+            })
+
+        return attrs
